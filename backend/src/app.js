@@ -32,9 +32,32 @@ if (missing.length) {
 /* ───────────────────────────────
    CORS
 ─────────────────────────────── */
+const allowedOrigins = [
+  "http://localhost:8080",
+  "http://localhost:5173",
+  "http://127.0.0.1:8080",
+  "http://127.0.0.1:5173",
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
+console.log("✅ Allowed origins:", allowedOrigins);
+
 app.use(
   cors({
-    origin: ["http://localhost:8080", "http://localhost:5173"],
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, Postman, curl requests)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        // In production, only allow listed origins
+        if (process.env.NODE_ENV === "production") {
+          callback(new Error("CORS not allowed"), false);
+        } else {
+          // In development, be more permissive
+          callback(null, true);
+        }
+      }
+    },
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -45,8 +68,8 @@ app.use(
    SECURITY HEADERS
 ─────────────────────────────── */
 app.use((req, res, next) => {
-  res.header("Cross-Origin-Opener-Policy", "unsafe-none");
-  res.header("Cross-Origin-Embedder-Policy", "unsafe-none");
+  // ✅ FIXED: Allow Google OAuth popups to communicate back via postMessage
+  res.header("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
   next();
 });
 
