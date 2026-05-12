@@ -5,16 +5,13 @@ import Payment from "../model/payment.model.js";
 
 // Utility function to generate invoice number
 const generateInvoiceNumber = async (userId) => {
-  const today = new Date();
-  const year = today.getFullYear();
-  const count = await Invoice.countDocuments({
-    userId,
-    createdAt: {
-      $gte: new Date(year, 0, 1),
-      $lt: new Date(year + 1, 0, 1),
-    },
-  });
-  return `INV-${year}-${String(count + 1).padStart(4, "0")}`;
+  const now = new Date();
+  const year = now.getFullYear();
+
+  const uniquePart = Date.now().toString().slice(-6);
+  const random = Math.floor(1000 + Math.random() * 9000);
+
+  return `INV-${year}-${uniquePart}-${random}`;
 };
 
 // ────────────────────────────────────────
