@@ -84,9 +84,8 @@ VITE_APP_VERSION=1.0.0
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
 2. Create OAuth 2.0 credentials
 3. Add authorized JavaScript origins:
-   - `http://localhost:5173` (development)
-   - `http://localhost:3000` (if using port 3000)
-   - Your production domain
+   - `http://localhost:8080` (development)
+   - Your Cloudflare production domain
 4. Copy Client ID to `.env` as `VITE_GOOGLE_CLIENT_ID`
 
 ## 🏃 Running the Application
@@ -97,7 +96,7 @@ VITE_APP_VERSION=1.0.0
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173`
+The app will be available at `http://localhost:8080`
 
 ### Build for Production
 
@@ -353,30 +352,23 @@ function MyForm() {
 
 ## 🚀 Deployment
 
-### Deploy to Vercel (Recommended)
+### Deploy to Cloudflare Pages
 
 1. Push code to GitHub
-2. Go to [Vercel](https://vercel.com/)
-3. Import your repository
-4. Set environment variables:
+2. Go to [Cloudflare Dashboard](https://dash.cloudflare.com/)
+3. Navigate to Pages and create a new project
+4. Connect your GitHub repository
+5. Set build settings:
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+6. Set environment variables:
    ```
    VITE_API_URL=https://your-backend.com
    VITE_GOOGLE_CLIENT_ID=your_google_client_id
    ```
-5. Deploy
+7. Deploy
 
-### Deploy to Netlify
-
-```bash
-# Install Netlify CLI
-npm install -g netlify-cli
-
-# Build
-npm run build
-
-# Deploy
-netlify deploy --prod --dir=dist
-```
+Your app will be available at the Cloudflare Pages URL (or your custom domain if configured).
 
 ### Deploy to Static Hosting (GitHub Pages)
 
